@@ -8,16 +8,16 @@ import TaskListPagination from "@/components/TaskListPagination";
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen w-full relative">
-      {/* Spring Meadow Mist Gradient */}
+    <div className="relative w-full min-h-screen">
+      {/* Lavender Blush Flow Gradient (Top Left to Bottom Right) */}
       <div
         className="absolute inset-0 z-0"
         style={{
-          background: `linear-gradient(90deg, #D4F1C5 0%, #E8F5E8 20%, #F0F8E8 40%, #FFF9E6 60%, #FFE5B4 80%, #FFDAB9 100%)`,
+          background: `linear-gradient(135deg, #E1BEE7 0%, #F3E5F5 20%, #FCE4EC 40%, #FFF0F5 60%, #F8BBD9 80%, #E1BEE7 100%)`,
         }}
       />
       {/* Your Content/Components */}
-      <div className="container pt-8 mx-auto relative z-10">
+      <div className="container relative z-10 pt-8 mx-auto">
         <div className="w-full max-w-2xl mx-auto space-y-6">
           {/* header */}
           <Header />
