@@ -71,9 +71,9 @@ const TaskCard = ({ task, index }) => {
               <>
                 <span className="text-xs text-muted-foreground"> - </span>
                 <Calendar className="size-3 text-muted-foreground" />
-                <spa className="text-xs text-muted-foreground">
+                <span className="text-xs text-muted-foreground">
                   {new Date(task.completedAt).toLocaleString()}
-                </spa>
+                </span>
               </>
             )}
           </div>

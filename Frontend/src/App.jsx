@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 function App() {
   return (
     <>
-    <Toaster/>
+    <Toaster richColors/>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
