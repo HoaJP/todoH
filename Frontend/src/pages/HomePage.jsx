@@ -7,16 +7,20 @@ import TaskList from "@/components/TaskList";
 import TaskListPagination from "@/components/TaskListPagination";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import axios from "axios";
+import api from "@/lib/axios";
 const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
   const [activeTaskCount, setActiveTaskCount] = useState(0);
   const [completeTaskCount, setCompleteTaskCount] = useState(0);
   const [filter, setFilter] = useState("all");
 
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/tasks");
+      const res = await api.get("/tasks");
       setTaskBuffer(res.data.task);
       setActiveTaskCount(res.data.activeCount);
       setCompleteTaskCount(res.data.completeCount);
@@ -36,10 +40,9 @@ const HomePage = () => {
         return true;
     }
   });
-
-  useEffect(() => {
+  const handleTaskChange = () => {
     fetchTasks();
-  }, []);
+  };
 
   return (
     <div className="relative w-full min-h-screen">
@@ -57,7 +60,7 @@ const HomePage = () => {
           <Header />
 
           {/* create task */}
-          <AddTask />
+          <AddTask handleNewTaskAdded={handleTaskChange} />
 
           {/* stats & filters */}
           <StatsAndFilters
@@ -68,7 +71,11 @@ const HomePage = () => {
           />
 
           {/* task list */}
-          <TaskList filteredTasks={filteredTasks} filter={filter} />
+          <TaskList
+            filteredTasks={filteredTasks}
+            filter={filter}
+            handleTaskChange={handleTaskChange}
+          />
 
           {/* pagination */}
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
