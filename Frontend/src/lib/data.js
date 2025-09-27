@@ -22,3 +22,4 @@ export const DateTimeOptions =[
         label:'All',
     }
 ]
+export const visibleTaskLimit = 4;

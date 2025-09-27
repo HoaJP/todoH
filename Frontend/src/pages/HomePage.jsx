@@ -8,17 +8,25 @@ import TaskListPagination from "@/components/TaskListPagination";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import api from "@/lib/axios";
+import { visibleTaskLimit } from "@/lib/data";
 const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
   const [activeTaskCount, setActiveTaskCount] = useState(0);
   const [completeTaskCount, setCompleteTaskCount] = useState(0);
-  const [filter, setFilter] = useState("all");//status
-  const [dateQuery, setDateQuery] = useState("all");//date
+  const [filter, setFilter] = useState("all"); //status
+  const [dateQuery, setDateQuery] = useState("all"); //date
+
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     fetchTasks();
   }, [dateQuery]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [filter, dateQuery]);
+
+  // logic
   const fetchTasks = async () => {
     try {
       const res = await api.get(`/tasks/?filter=${dateQuery}`);
@@ -31,6 +39,23 @@ const HomePage = () => {
     }
   };
 
+  const handleTaskChange = () => {
+    fetchTasks();
+  };
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      setPage((prev) => prev + 1);
+    }
+  };
+  const handlePrevPage = () => {
+    if (page > 1) {
+      setPage((prev) => prev - 1);
+    }
+  };
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+  // variable
   const filteredTasks = taskBuffer.filter((task) => {
     switch (filter) {
       case "active":
@@ -41,9 +66,16 @@ const HomePage = () => {
         return true;
     }
   });
-  const handleTaskChange = () => {
-    fetchTasks();
-  };
+
+  // pagination
+  const visibleTasks = filteredTasks.slice(
+    (page - 1) * visibleTaskLimit,
+    page * visibleTaskLimit
+  );
+  if(visibleTasks.length===0){
+    handlePrevPage()
+  }
+  const totalPages = Math.ceil(filteredTasks.length / visibleTaskLimit);
 
   return (
     <div className="relative w-full min-h-screen">
@@ -73,14 +105,20 @@ const HomePage = () => {
 
           {/* task list */}
           <TaskList
-            filteredTasks={filteredTasks}
+            filteredTasks={visibleTasks}
             filter={filter}
             handleTaskChange={handleTaskChange}
           />
 
           {/* pagination */}
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <TaskListPagination />
+            <TaskListPagination
+              handleNextPage={handleNextPage}
+              handlePrevPage={handlePrevPage}
+              handlePageChange={handlePageChange}
+              page={page}
+              totalPages={totalPages}
+            />
             <DateTimeFilter dateQuery={dateQuery} setDateQuery={setDateQuery} />
           </div>
           <Footer
